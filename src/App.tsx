@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   ArrowRight, ChevronDown, ChevronLeft, ChevronRight, CircleUserRound, Heart,
   Leaf, Menu, Moon, Plus, Minus, Search, ShoppingBag, Sun, X, Check,
   Instagram, Mail, MapPin, Trash2, Sparkles, Send
 } from 'lucide-react';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from './supabase';
 
 type Category = 'Blusas' | 'Rebozos' | 'Bolsas' | 'Joyería';
 type Product = {
@@ -40,6 +42,44 @@ function App() {
   const [contactSent, setContactSent] = useState(false);
   const [query, setQuery] = useState('');
   const [symbol, setSymbol] = useState(0);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authMessage, setAuthMessage] = useState('');
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const openAuth = (mode: 'login' | 'signup' = 'login') => {
+    setAuthMode(mode);
+    setAuthError('');
+    setAuthMessage('');
+    setAuthOpen(true);
+  };
+
+  const handleAuth = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setAuthLoading(true);
+    setAuthError('');
+    setAuthMessage('');
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get('email') ?? '');
+    const password = String(formData.get('password') ?? '');
+    const name = String(formData.get('name') ?? '');
+    const country = String(formData.get('country') ?? '');
+    const result = authMode === 'signup'
+      ? await supabase.auth.signUp({ email, password, options: { data: { name, country } } })
+      : await supabase.auth.signInWithPassword({ email, password });
+    if (result.error) setAuthError('No pudimos completar el acceso. Revisa tus datos e inténtalo de nuevo.');
+    else if (authMode === 'signup' && !result.data.session) setAuthMessage('Tu cuenta fue creada. Ya puedes iniciar sesión.');
+    else setAuthOpen(false);
+    setAuthLoading(false);
+  };
 
   const filtered = useMemo(() => products.filter((product) => {
     const matchesCategory = category === 'Todas' || product.category === category;
@@ -77,7 +117,7 @@ function App() {
       <button className="mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Abrir menú">{mobileMenu ? <X /> : <Menu />}</button>
       <button className="brand" onClick={() => goTo('inicio')}><img src={brandBoard} alt="Huellas de Venada" /><span><strong>Huellas de Venada</strong><small>ARTESANÍA MAZAHUA</small></span></button>
       <nav className={mobileMenu ? 'nav open' : 'nav'}><button onClick={() => goTo('inicio')}>Inicio</button><button onClick={() => goTo('historia')}>Nuestra historia</button><button onClick={() => goTo('artesanas')}>Conoce a las artesanas</button><button onClick={() => goTo('tienda')}>Tienda</button></nav>
-      <div className="header-actions"><button className="icon-button" aria-label="Buscar" onClick={() => goTo('tienda')}><Search /></button><button className="icon-button theme-toggle" aria-label="Cambiar tema" onClick={() => setDark(!dark)}>{dark ? <Sun /> : <Moon />}</button><button className="account"><CircleUserRound /><span>Entrar</span></button><button className="cart-button" onClick={() => setCartOpen(true)} aria-label="Abrir carrito"><ShoppingBag /><b>{cartCount}</b></button></div>
+      <div className="header-actions"><button className="icon-button" aria-label="Buscar" onClick={() => goTo('tienda')}><Search /></button><button className="icon-button theme-toggle" aria-label="Cambiar tema" onClick={() => setDark(!dark)}>{dark ? <Sun /> : <Moon />}</button><button className="account" onClick={() => openAuth()}><CircleUserRound /><span>{session ? 'Mi cuenta' : 'Entrar'}</span></button><button className="cart-button" onClick={() => setCartOpen(true)} aria-label="Abrir carrito"><ShoppingBag /><b>{cartCount}</b></button></div>
     </header>
 
     <main>
@@ -91,12 +131,13 @@ function App() {
 
       <section className="symbols section-wrap"><div className="section-heading centered"><div><p className="eyebrow">LO QUE CUENTA CADA BORDADO</p><h2>Simbología que nos acompaña</h2><p>Selecciona un símbolo para descubrir la historia que guarda.</p></div></div><div className="symbols-layout"><div className="embroidered"><img src="/images/inspiration/Huellas_de_Venada__Tradición_Artesanal.png" alt="Bordado mazahua" /><div className="symbol-orbit"><button onClick={() => setSymbol(0)} className={symbol === 0 ? 'selected' : ''}>♢</button><button onClick={() => setSymbol(2)} className={symbol === 2 ? 'selected' : ''}>✳</button><button onClick={() => setSymbol(3)} className={symbol === 3 ? 'selected' : ''}>✤</button><button onClick={() => setSymbol(4)} className={symbol === 4 ? 'selected' : ''}>☼</button></div></div><div className="symbol-copy"><span className="symbol-number">0{symbol + 1} / 06</span><h3>{symbols[symbol][0]}</h3><p>{symbols[symbol][1]}</p><span className="symbol-phrase">{symbols[symbol][2]}</span><div className="symbol-tabs">{symbols.map((item, i) => <button key={item[0]} className={symbol === i ? 'active' : ''} onClick={() => setSymbol(i)}>{item[0]}</button>)}</div></div></div></section>
 
-      <section className="contact section-wrap"><div><p className="eyebrow">ESTAMOS PARA ESCUCHARTE</p><h2>Conversemos</h2><p>¿Tienes dudas sobre una pieza, una medida o quieres conocer más de nuestro trabajo? Escríbenos.</p><div className="contact-detail"><span><Mail size={17} /> hola@huellasdevenada.mx</span><span><MapPin size={17} /> Estado de México, México</span><span><Instagram size={17} /> @huellasdevenada</span></div></div><form onSubmit={(e) => { e.preventDefault(); setContactSent(true); }} className="contact-form">{contactSent ? <div className="sent"><Check size={30} /><h3>Mensaje recibido</h3><p>Gracias por escribirnos. Te responderemos pronto.</p><button type="button" className="text-button" onClick={() => setContactSent(false)}>Enviar otro mensaje</button></div> : <><div className="form-row"><label>Nombre<input required placeholder="Tu nombre" /></label><label>Correo electrónico<input required type="email" placeholder="tu@correo.com" /></label></div><label>Asunto<input required placeholder="¿En qué podemos ayudarte?" /></label><label>Mensaje<textarea required rows={4} placeholder="Cuéntanos..."></textarea></label><button className="primary-button" type="submit">Enviar mensaje <Send size={16} /></button></>}</form></section>
+      <section className="contact section-wrap"><div><p className="eyebrow">ESTAMOS PARA ESCUCHARTE</p><h2>Conversemos</h2><p>¿Tienes dudas sobre una pieza, una medida o quieres conocer más de nuestro trabajo? Escríbenos.</p><div className="contact-detail"><span><Mail size={17} /> hola@huellasdevenada.mx</span><span><MapPin size={17} /> Estado de México, México</span><span><Instagram size={17} /> @huellasdevenada</span></div></div><form onSubmit={(e) => { e.preventDefault(); setContactSent(true); }} className="contact-form">{contactSent ? <div className="sent"><Check size={30} /><h3>Mensaje recibido</h3><p>Gracias por escribirnos. Te responderemos pronto.</p><button type="button" className="text-button" onClick={() => setContactSent(false)}>Enviar otro mensaje</button></div> : <><div className="form-row"><label>Nombre<input required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü\\s]+" title="Escribe solo letras, espacios y acentos" placeholder="Tu nombre" onChange={(event) => { event.currentTarget.value = event.currentTarget.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\\s]/g, ''); }} /></label><label>Correo electrónico<input required type="email" placeholder="tu@correo.com" /></label></div><label>Asunto<input required placeholder="¿En qué podemos ayudarte?" /></label><label>Mensaje<textarea required rows={4} placeholder="Cuéntanos..."></textarea></label><button className="primary-button" type="submit">Enviar mensaje <Send size={16} /></button></>}</form></section>
     </main>
 
     <footer><button className="brand footer-brand" onClick={() => goTo('inicio')}><img src={brandBoard} alt="Huellas de Venada" /><span><strong>Huellas de Venada</strong><small>ARTESANÍA MAZAHUA</small></span></button><p>Tradición que deja huella, arte que nos conecta.</p><span>© 2024 Huellas de Venada · Hecho con respeto</span></footer>
 
     {notice && <div className="notice"><Check size={18} /> {notice}</div>}
+    {authOpen && <div className="modal-backdrop" onClick={() => setAuthOpen(false)}><div className="auth-modal" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setAuthOpen(false)}><X /></button><div className="auth-mark"><CircleUserRound size={28} /></div><p className="eyebrow">HUELLAS DE VENADA</p><h2>{authMode === 'login' ? 'Qué gusto verte' : 'Crea tu cuenta'}</h2><p className="auth-intro">{authMode === 'login' ? 'Ingresa para guardar tus piezas favoritas.' : 'Forma parte de nuestra comunidad y guarda tus piezas favoritas.'}</p><div className="auth-tabs"><button className={authMode === 'login' ? 'active' : ''} onClick={() => openAuth('login')}>Iniciar sesión</button><button className={authMode === 'signup' ? 'active' : ''} onClick={() => openAuth('signup')}>Crear cuenta</button></div>{authMessage && <div className="auth-message">{authMessage}</div>}{authError && <div className="auth-error">{authError}</div>}{session ? <div className="signed-in"><Check size={25} /><p>Ya has iniciado sesión.</p><button className="text-button" onClick={async () => { await supabase.auth.signOut(); setAuthOpen(false); }}>Cerrar sesión</button></div> : <form className="auth-form" onSubmit={handleAuth}>{authMode === 'signup' && <><label>Nombre<input name="name" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü\\s]+" title="Escribe solo letras, espacios y acentos" placeholder="Tu nombre" /></label><label>País de residencia<select name="country" required defaultValue=""><option value="" disabled>Selecciona tu país</option><option>México</option><option>Estados Unidos</option><option>Canadá</option><option>Otro país</option></select></label></>}<label>Correo electrónico<input name="email" required type="email" placeholder="tu@correo.com" /></label><label>Contraseña<input name="password" required type="password" minLength={6} placeholder="Mínimo 6 caracteres" /></label><button className="primary-button full" type="submit" disabled={authLoading}>{authLoading ? 'Procesando...' : authMode === 'login' ? 'Entrar a mi cuenta' : 'Crear mi cuenta'} <ArrowRight size={16} /></button></form>}</div></div>}
     {selected && <div className="modal-backdrop" onClick={() => setSelected(null)}><div className="product-modal" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X /></button><div className="modal-image"><img src={selected.image} alt={selected.name} /></div><div className="modal-content"><span className="category-label">{selected.category}</span><h2>{selected.name}</h2><div className="modal-price">{money(selected.price)}</div><p>{selected.description}</p><div className="detail-list"><span><b>Material</b>{selected.material}</span><span><b>Medidas</b>{selected.size}</span><span><b>Artesana</b>{selected.artisan}</span><span><b>Tiempo de elaboración</b>{selected.time}</span></div><button className="primary-button full" onClick={() => { addToCart(selected); setSelected(null); }}>Agregar a mi bolsa <ShoppingBag size={17} /></button></div></div></div>}
     {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}><div className="drawer-header"><div><p className="eyebrow">TU SELECCIÓN</p><h2>Mi bolsa <span>({cartCount})</span></h2></div><button onClick={() => setCartOpen(false)}><X /></button></div>{cart.length === 0 ? <div className="cart-empty"><ShoppingBag size={40} /><h3>Tu bolsa está esperando</h3><p>Agrega piezas con historia para comenzar.</p><button className="primary-button" onClick={() => { setCartOpen(false); goTo('tienda'); }}>Explorar colección</button></div> : <><div className="cart-items">{cart.map(({ product, quantity }) => <div className="cart-item" key={product.id}><img src={product.image} alt={product.name} /><div><h3>{product.name}</h3><span>{money(product.price)}</span><div className="quantity"><button onClick={() => changeQuantity(product.id, -1)}><Minus size={13} /></button><b>{quantity}</b><button onClick={() => changeQuantity(product.id, 1)}><Plus size={13} /></button></div></div><button className="remove" onClick={() => removeFromCart(product.id)}><Trash2 size={15} /></button></div>)}</div><div className="cart-summary"><div><span>Subtotal</span><strong>{money(subtotal)}</strong></div><p>Envío gratis en compras mayores a $2,500 MXN</p><button className="primary-button full" onClick={() => setNotice('Este prototipo no procesa pagos reales')}>Continuar con mi pedido <ArrowRight size={17} /></button></div></>}</aside></div>}
   </div>;
