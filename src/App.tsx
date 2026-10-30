@@ -1,0 +1,105 @@
+import { useMemo, useState } from 'react';
+import {
+  ArrowRight, ChevronDown, ChevronLeft, ChevronRight, CircleUserRound, Heart,
+  Leaf, Menu, Moon, Plus, Minus, Search, ShoppingBag, Sun, X, Check,
+  Instagram, Mail, MapPin, Trash2, Sparkles, Send
+} from 'lucide-react';
+
+type Category = 'Blusas' | 'Rebozos' | 'Bolsas' | 'Joyería';
+type Product = {
+  id: number; name: string; category: Category; price: number; color: string;
+  image: string; description: string; material: string; size: string;
+  artisan: string; time: string; badge?: string; rating: number; featured: boolean; created: number;
+};
+type CartItem = { product: Product; quantity: number };
+
+const localHero = '/images/carousel/Home_CarruselAO4.webp';
+const brandBoard = '/images/branding/Tablero_de_marca_Huellas_de_Venada.png';
+const products: Product[] = [
+  { id: 1, name: 'Blusa Flor de Venada', category: 'Blusas', price: 1200, color: 'Crudo', image: 'https://images.pexels.com/photos/37559530/pexels-photo-37559530.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', description: 'Blusa de algodón con bordado floral inspirado en la milpa y el venado guía.', material: 'Algodón y bordado de hilo de algodón', size: 'Unitalla, 56 cm de alto x 64 cm de ancho', artisan: 'María Hernández', time: '14 días', badge: 'Más querida', rating: 5, featured: true, created: 6 },
+  { id: 2, name: 'Rebozo Camino Rojo', category: 'Rebozos', price: 1450, color: 'Fucsia', image: 'https://images.pexels.com/photos/34131689/pexels-photo-34131689.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', description: 'Pieza ligera con flecos hechos a mano y una trama que evoca los caminos de la vida.', material: 'Algodón tejido en telar', size: '180 x 70 cm', artisan: 'Josefina González', time: '18 días', badge: 'Pieza única', rating: 5, featured: true, created: 5 },
+  { id: 3, name: 'Bolsa Maíz Abundante', category: 'Bolsas', price: 890, color: 'Verde', image: 'https://images.pexels.com/photos/34115245/pexels-photo-34115245.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', description: 'Bolsa estructurada con asas resistentes y un bordado que celebra la abundancia de la tierra.', material: 'Lona de algodón y piel vegetal', size: '32 x 28 x 10 cm', artisan: 'Rosa Martínez', time: '9 días', rating: 4, featured: true, created: 4 },
+  { id: 4, name: 'Aretes Estrella de Lluvia', category: 'Joyería', price: 420, color: 'Naranja', image: 'https://images.pexels.com/photos/31854096/pexels-photo-31854096.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', description: 'Aretes bordados a mano con la estrella de ocho picos, guardiana de la noche.', material: 'Hilo de algodón y acero hipoalergénico', size: '5 cm de largo', artisan: 'Teresa Pérez', time: '3 días', badge: 'Nuevo', rating: 5, featured: false, created: 9 },
+  { id: 5, name: 'Pulsera Sol y Luna', category: 'Joyería', price: 280, color: 'Amarillo', image: 'https://images.pexels.com/photos/33067642/pexels-photo-33067642.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', description: 'Pulsera tejida que honra la unión del sol, la luna y el lucero.', material: 'Hilo encerado y chaquira', size: 'Ajustable, 16–22 cm', artisan: 'Elena Mejía', time: '2 días', rating: 4, featured: false, created: 8 },
+  { id: 6, name: 'Blusa Estrella Mazahua', category: 'Blusas', price: 1680, color: 'Morado', image: '/images/inspiration/Huellas_de_Venada__Tradición_Artesanal.png', description: 'Bordado de alto contraste con estrellas y flores para celebrar la identidad.', material: 'Manta de algodón y bordado de hilo', size: 'Unitalla, 60 cm de alto x 68 cm de ancho', artisan: 'Claudia de la Cruz', time: '21 días', rating: 5, featured: false, created: 3 },
+];
+
+const money = (value: number) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(value);
+
+function App() {
+  const [dark, setDark] = useState(false);
+  const [mobileMenu, setMobileMenu] = useState(false);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [notice, setNotice] = useState('');
+  const [selected, setSelected] = useState<Product | null>(null);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [category, setCategory] = useState('Todas');
+  const [color, setColor] = useState('Todos');
+  const [sort, setSort] = useState('recent');
+  const [carousel, setCarousel] = useState(0);
+  const [contactSent, setContactSent] = useState(false);
+  const [query, setQuery] = useState('');
+  const [symbol, setSymbol] = useState(0);
+
+  const filtered = useMemo(() => products.filter((product) => {
+    const matchesCategory = category === 'Todas' || product.category === category;
+    const matchesColor = color === 'Todos' || product.color === color;
+    const matchesQuery = product.name.toLowerCase().includes(query.toLowerCase());
+    return matchesCategory && matchesColor && matchesQuery;
+  }).sort((a, b) => sort === 'low' ? a.price - b.price : sort === 'high' ? b.price - a.price : b.created - a.created), [category, color, sort, query]);
+
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  const addToCart = (product: Product) => {
+    setCart((current) => current.some((item) => item.product.id === product.id)
+      ? current.map((item) => item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item)
+      : [...current, { product, quantity: 1 }]);
+    setNotice(`${product.name} se agregó a tu bolsa`);
+    setTimeout(() => setNotice(''), 2600);
+  };
+  const changeQuantity = (id: number, delta: number) => setCart((current) => current.map((item) => item.product.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item));
+  const removeFromCart = (id: number) => setCart((current) => current.filter((item) => item.product.id !== id));
+  const goTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMobileMenu(false); };
+
+  const heroes = [localHero, 'https://images.pexels.com/photos/21926493/pexels-photo-21926493.jpeg?auto=compress&cs=tinysrgb&h=650&w=940', 'https://images.pexels.com/photos/7261526/pexels-photo-7261526.jpeg?auto=compress&cs=tinysrgb&h=650&w=940'];
+  const symbols = [
+    ['El venado', 'Protección y guía. Muestra el camino a quienes viajan para que no se pierdan en el monte.', 'Deja huella en el camino'],
+    ['El camino de la vida', 'Sus subidas, bajadas y tramos planos representan las experiencias alegres y difíciles del ser humano.', 'Todo camino cuenta'],
+    ['La estrella', 'La estrella de ocho picos es flor mazahua y guardiana de la noche, protectora de la salud y mensajera de buenas noticias.', 'Luz para volver a casa'],
+    ['El maíz y los elotes', 'Simbolizan la fertilidad y la abundancia de la tierra para el pueblo mazahua.', 'La tierra que alimenta'],
+    ['La luna y el sol', 'Junto con el lucero forman una tríada sagrada que equilibra la salud y la enfermedad.', 'El equilibrio de la vida'],
+    ['El color rojo', 'Se utiliza para conmemorar y honrar a los ancestros.', 'Memoria que permanece'],
+  ];
+
+  return <div className={dark ? 'app dark' : 'app'}>
+    <div className="shipping">Envíos gratis en México en compras mayores a $2,500 MXN <span>·</span> Cada compra apoya directamente a nuestras artesanas</div>
+    <header className="header">
+      <button className="mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Abrir menú">{mobileMenu ? <X /> : <Menu />}</button>
+      <button className="brand" onClick={() => goTo('inicio')}><img src={brandBoard} alt="Huellas de Venada" /><span><strong>Huellas de Venada</strong><small>ARTESANÍA MAZAHUA</small></span></button>
+      <nav className={mobileMenu ? 'nav open' : 'nav'}><button onClick={() => goTo('inicio')}>Inicio</button><button onClick={() => goTo('historia')}>Nuestra historia</button><button onClick={() => goTo('artesanas')}>Conoce a las artesanas</button><button onClick={() => goTo('tienda')}>Tienda</button></nav>
+      <div className="header-actions"><button className="icon-button" aria-label="Buscar" onClick={() => goTo('tienda')}><Search /></button><button className="icon-button theme-toggle" aria-label="Cambiar tema" onClick={() => setDark(!dark)}>{dark ? <Sun /> : <Moon />}</button><button className="account"><CircleUserRound /><span>Entrar</span></button><button className="cart-button" onClick={() => setCartOpen(true)} aria-label="Abrir carrito"><ShoppingBag /><b>{cartCount}</b></button></div>
+    </header>
+
+    <main>
+      <section id="inicio" className="hero section-wrap"><div className="hero-copy"><p className="eyebrow">ARTESANÍA MAZAHUA · HECHA A MANO</p><h1>Tradición que deja huella, <em>arte que nos conecta.</em></h1><p className="lead">Cada pieza cuenta una historia. Cada bordado lleva consigo el talento de unas manos que mantienen viva una tradición.</p><p>En Huellas de Venada acercamos el trabajo de las mujeres artesanas mazahuas a ti, promoviendo la venta de sus creaciones y reconociendo el valor de su arte.</p><button className="primary-button" onClick={() => goTo('tienda')}>Descubre nuestra colección <ArrowRight size={17} /></button><div className="hero-note"><span><Leaf size={16} /> 100% hecho a mano</span><span><Heart size={16} /> Compra con propósito</span></div></div><div className="hero-gallery"><div className="hero-image"><img src={heroes[carousel]} alt="Textiles y artesanía mazahua" /><button className="circle-arrow left" onClick={() => setCarousel((carousel + heroes.length - 1) % heroes.length)}><ChevronLeft /></button><button className="circle-arrow right" onClick={() => setCarousel((carousel + 1) % heroes.length)}><ChevronRight /></button><div className="dots">{heroes.map((_, i) => <button key={i} className={i === carousel ? 'active' : ''} onClick={() => setCarousel(i)} aria-label={`Imagen ${i + 1}`} />)}</div></div><div className="gallery-caption"><span>01 — La belleza de lo lento</span><span>Tradición viva, presente y futura</span></div></div></section>
+
+      <section id="tienda" className="shop section-wrap"><div className="section-heading"><div><p className="eyebrow">COLECCIÓN DE TEMPORADA</p><h2>Nuestra tienda <span>✳</span></h2><p>Descubre prendas y textiles elaborados a mano por mujeres artesanas mazahuas.</p></div><div className="search-field"><Search size={17} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar una pieza..." /></div></div><div className="shop-toolbar"><div className="filters"><select value={category} onChange={(e) => setCategory(e.target.value)}><option>Todas</option><option>Blusas</option><option>Rebozos</option><option>Bolsas</option><option>Joyería</option></select><select value={color} onChange={(e) => setColor(e.target.value)}><option>Todos</option><option>Crudo</option><option>Fucsia</option><option>Verde</option><option>Naranja</option><option>Amarillo</option><option>Morado</option></select></div><label className="sort-label">Ordenar por <select value={sort} onChange={(e) => setSort(e.target.value)}><option value="recent">Más recientes</option><option value="low">Precio menor</option><option value="high">Precio mayor</option></select><ChevronDown size={15} /></label></div><div className="product-grid">{filtered.map((product) => <article className="product-card" key={product.id}><div className="product-image"><img src={product.image} alt={product.name} />{product.badge && <span className="badge">{product.badge}</span>}<button className="like" aria-label="Favorito"><Heart size={17} /></button><button className="quick-add" onClick={() => addToCart(product)}><Plus size={15} /> Agregar</button></div><button className="product-info" onClick={() => setSelected(product)}><span className="category-label">{product.category}</span><h3>{product.name}</h3><div className="product-bottom"><strong>{money(product.price)}</strong><span>{'★'.repeat(product.rating)}</span></div></button></article>)}</div>{filtered.length === 0 && <div className="empty-state">No encontramos piezas con esos filtros. Prueba otra combinación.</div>}</section>
+
+      <section className="story-band" id="historia"><div className="story-image"><img src={brandBoard} alt="Identidad visual Huellas de Venada" /></div><div className="story-copy"><p className="eyebrow">NUESTRA HISTORIA</p><h2>Vestir la memoria, <em>honrar las manos.</em></h2><p>Huellas de Venada nace para acercar el arte mazahua a nuevos espacios y personas. Creemos que cada puntada merece ser reconocida, y que cada mujer artesana debe recibir un pago justo por el tiempo, saber y corazón que pone en su trabajo.</p><p>Más que una tienda, somos un puente entre la tradición y la vida contemporánea.</p><blockquote>“Tradición que deja huella, arte que nos conecta”.</blockquote><button className="text-button" onClick={() => goTo('artesanas')}>Conoce nuestra historia <ArrowRight size={16} /></button></div></section>
+
+      <section id="artesanas" className="artesanas section-wrap"><div className="section-heading centered"><div><p className="eyebrow">LAS MANOS DETRÁS DE CADA PIEZA</p><h2>Conoce a las artesanas</h2><p>Ellas mantienen viva una tradición que se transforma sin perder sus raíces.</p></div></div><div className="artisan-grid"><article className="artisan-card featured-artisan"><img src="https://images.pexels.com/photos/7261526/pexels-photo-7261526.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Artesana bordando" /><div><span>San Felipe del Progreso</span><h3>María Hernández</h3><p>“Aprendí a bordar mirando a mi abuela. Hoy cada flor lleva algo de las dos.”</p></div></article><article className="artisan-card"><img src="https://images.pexels.com/photos/21926526/pexels-photo-21926526.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Mujer artesana" /><div><span>Villa de Allende</span><h3>Josefina González</h3><p>Tejedora y guardiana de los caminos de la vida.</p></div></article><article className="artisan-card color-card"><Sparkles size={28} /><h3>Tu compra deja huella</h3><p>Con cada pieza apoyas el trabajo digno y la autonomía económica de una mujer artesana.</p><button className="text-button" onClick={() => goTo('tienda')}>Ver la colección <ArrowRight size={16} /></button></article></div></section>
+
+      <section className="symbols section-wrap"><div className="section-heading centered"><div><p className="eyebrow">LO QUE CUENTA CADA BORDADO</p><h2>Simbología que nos acompaña</h2><p>Selecciona un símbolo para descubrir la historia que guarda.</p></div></div><div className="symbols-layout"><div className="embroidered"><img src="/images/inspiration/Huellas_de_Venada__Tradición_Artesanal.png" alt="Bordado mazahua" /><div className="symbol-orbit"><button onClick={() => setSymbol(0)} className={symbol === 0 ? 'selected' : ''}>♢</button><button onClick={() => setSymbol(2)} className={symbol === 2 ? 'selected' : ''}>✳</button><button onClick={() => setSymbol(3)} className={symbol === 3 ? 'selected' : ''}>✤</button><button onClick={() => setSymbol(4)} className={symbol === 4 ? 'selected' : ''}>☼</button></div></div><div className="symbol-copy"><span className="symbol-number">0{symbol + 1} / 06</span><h3>{symbols[symbol][0]}</h3><p>{symbols[symbol][1]}</p><span className="symbol-phrase">{symbols[symbol][2]}</span><div className="symbol-tabs">{symbols.map((item, i) => <button key={item[0]} className={symbol === i ? 'active' : ''} onClick={() => setSymbol(i)}>{item[0]}</button>)}</div></div></div></section>
+
+      <section className="contact section-wrap"><div><p className="eyebrow">ESTAMOS PARA ESCUCHARTE</p><h2>Conversemos</h2><p>¿Tienes dudas sobre una pieza, una medida o quieres conocer más de nuestro trabajo? Escríbenos.</p><div className="contact-detail"><span><Mail size={17} /> hola@huellasdevenada.mx</span><span><MapPin size={17} /> Estado de México, México</span><span><Instagram size={17} /> @huellasdevenada</span></div></div><form onSubmit={(e) => { e.preventDefault(); setContactSent(true); }} className="contact-form">{contactSent ? <div className="sent"><Check size={30} /><h3>Mensaje recibido</h3><p>Gracias por escribirnos. Te responderemos pronto.</p><button type="button" className="text-button" onClick={() => setContactSent(false)}>Enviar otro mensaje</button></div> : <><div className="form-row"><label>Nombre<input required placeholder="Tu nombre" /></label><label>Correo electrónico<input required type="email" placeholder="tu@correo.com" /></label></div><label>Asunto<input required placeholder="¿En qué podemos ayudarte?" /></label><label>Mensaje<textarea required rows={4} placeholder="Cuéntanos..."></textarea></label><button className="primary-button" type="submit">Enviar mensaje <Send size={16} /></button></>}</form></section>
+    </main>
+
+    <footer><button className="brand footer-brand" onClick={() => goTo('inicio')}><img src={brandBoard} alt="Huellas de Venada" /><span><strong>Huellas de Venada</strong><small>ARTESANÍA MAZAHUA</small></span></button><p>Tradición que deja huella, arte que nos conecta.</p><span>© 2024 Huellas de Venada · Hecho con respeto</span></footer>
+
+    {notice && <div className="notice"><Check size={18} /> {notice}</div>}
+    {selected && <div className="modal-backdrop" onClick={() => setSelected(null)}><div className="product-modal" onClick={(e) => e.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)}><X /></button><div className="modal-image"><img src={selected.image} alt={selected.name} /></div><div className="modal-content"><span className="category-label">{selected.category}</span><h2>{selected.name}</h2><div className="modal-price">{money(selected.price)}</div><p>{selected.description}</p><div className="detail-list"><span><b>Material</b>{selected.material}</span><span><b>Medidas</b>{selected.size}</span><span><b>Artesana</b>{selected.artisan}</span><span><b>Tiempo de elaboración</b>{selected.time}</span></div><button className="primary-button full" onClick={() => { addToCart(selected); setSelected(null); }}>Agregar a mi bolsa <ShoppingBag size={17} /></button></div></div></div>}
+    {cartOpen && <div className="drawer-backdrop" onClick={() => setCartOpen(false)}><aside className="cart-drawer" onClick={(e) => e.stopPropagation()}><div className="drawer-header"><div><p className="eyebrow">TU SELECCIÓN</p><h2>Mi bolsa <span>({cartCount})</span></h2></div><button onClick={() => setCartOpen(false)}><X /></button></div>{cart.length === 0 ? <div className="cart-empty"><ShoppingBag size={40} /><h3>Tu bolsa está esperando</h3><p>Agrega piezas con historia para comenzar.</p><button className="primary-button" onClick={() => { setCartOpen(false); goTo('tienda'); }}>Explorar colección</button></div> : <><div className="cart-items">{cart.map(({ product, quantity }) => <div className="cart-item" key={product.id}><img src={product.image} alt={product.name} /><div><h3>{product.name}</h3><span>{money(product.price)}</span><div className="quantity"><button onClick={() => changeQuantity(product.id, -1)}><Minus size={13} /></button><b>{quantity}</b><button onClick={() => changeQuantity(product.id, 1)}><Plus size={13} /></button></div></div><button className="remove" onClick={() => removeFromCart(product.id)}><Trash2 size={15} /></button></div>)}</div><div className="cart-summary"><div><span>Subtotal</span><strong>{money(subtotal)}</strong></div><p>Envío gratis en compras mayores a $2,500 MXN</p><button className="primary-button full" onClick={() => setNotice('Este prototipo no procesa pagos reales')}>Continuar con mi pedido <ArrowRight size={17} /></button></div></>}</aside></div>}
+  </div>;
+}
+
+export default App;
