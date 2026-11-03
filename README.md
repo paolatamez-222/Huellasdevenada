@@ -16,50 +16,51 @@ Crear una plataforma digital intuitiva y atractiva que permita explorar y adquir
 
 Características principales
 
-Página de inicio con presentación de la marca.
+-Página de inicio con presentación de la marca.
 
-Carrusel de fotografías de prendas artesanales.
+-Carrusel de fotografías de prendas artesanales.
 
-Catálogo digital de productos.
+-Catálogo digital de productos.
 
-Filtros por categoría, precio y color.
+-Filtros por categoría, precio y color.
 
-Fichas individuales con fotografías y características.
+-Fichas individuales con fotografías y características.
 
-Carrito de compras interactivo.
+-Carrito de compras interactivo.
 
-Sección dedicada a conocer a las artesanas.
+-Sección dedicada a conocer a las artesanas.
 
-Formulario de contacto.
+-Formulario de contacto.
 
-Modo claro y oscuro.
+-Modo claro y oscuro.
 
-Diseño adaptable a dispositivos móviles y computadoras.
+-Diseño adaptable a dispositivos móviles y computadoras.
 
-Identidad visual
+-Identidad visual
 
-La identidad gráfica está inspirada en los colores y elementos visuales de los bordados mazahuas.
+-La identidad gráfica está inspirada en los colores y elementos visuales de los bordados mazahuas.
 
 Paleta de colores:
 
-Crudo: #F7F3EA
+-Crudo: #F7F3EA
 
-Café tierra: #6D4C41
+-Café tierra: #6D4C41
 
-Verde bosque: #00796B
+-Verde bosque: #00796B
 
-Fucsia: #C2185B
+-Fucsia: #C2185B
 
 Tipografías:
 
-Cormorant Garamond: títulos y encabezados.
+-Cormorant Garamond: títulos y encabezados.
 
-Lato: textos y navegación.
+-Lato: textos y navegación.
 
 Herramientas utilizadas
 
-Bolt.new: desarrollo asistido por inteligencia artificial.
-GitHub: almacenamiento y control de versiones.
+-Bolt.new: desarrollo asistido por inteligencia artificial.
+
+-GitHub: almacenamiento y control de versiones.
 
 Prompts utilizados:
 
@@ -95,7 +96,7 @@ A.Barra de navegación que incluya:
 1. Barra informativa superior que diga:
 "Envíos gratis en México en compras mayores a $2,500 MXN". que sobresalga
 
-2.Encabezado principal con:
+2. Encabezado principal con:
 Logotipo de Huellas de Venada.
 Nombre de la marca.
 Menú de navegación: Inicio, Nuestra historia, Conoce a las artesanas y Tienda.
