@@ -125,13 +125,13 @@ function App() {
   const goTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMobileMenu(false); };
 
   const symbols: SymbolItem[] = [
-    { title: 'El venado', meaning: 'Protección y guía. Muestra el camino a quienes viajan para que no se pierdan en el monte.', phrase: 'Deja huella en el camino', points: [{ left: '38.6%', top: '43.2%' }, { left: '61.1%', top: '43%' }] },
+    { title: 'El venado', meaning: 'Protección y guía. Muestra el camino a quienes viajan para que no se pierdan en el monte.', phrase: 'Deja huella en el camino', points: [{ left: '38.6%', top: '45%' }, { left: '61.1%', top: '44.8%' }] },
     { title: 'El camino de la vida', meaning: 'Sus subidas, bajadas y tramos planos representan las experiencias alegres y difíciles del ser humano.', phrase: 'Todo camino cuenta', points: [{ left: '50%', top: '25.5%' }] },
-    { title: 'La estrella de picos', meaning: 'La estrella de ocho picos es flor mazahua y guardiana de la noche, protectora de la salud y mensajera de buenas noticias.', phrase: 'Luz para volver a casa', points: [{ left: '50%', top: '71.5%' }] },
-    { title: 'El maíz', meaning: 'Simbolizan la fertilidad y la abundancia de la tierra para el pueblo mazahua.', phrase: 'La tierra que alimenta', points: [{ left: '31%', top: '75.5%' }, { left: '69.2%', top: '75.5%' }] },
+    { title: 'La estrella de picos', meaning: 'La estrella de ocho picos es flor mazahua y guardiana de la noche, protectora de la salud y mensajera de buenas noticias.', phrase: 'Luz para volver a casa', points: [{ left: '50%', top: '76.5%' }] },
+    { title: 'El maíz', meaning: 'Simbolizan la fertilidad y la abundancia de la tierra para el pueblo mazahua.', phrase: 'La tierra que alimenta', points: [{ left: '34%', top: '75.5%' }, { left: '66%', top: '75.5%' }] },
     { title: 'El sol y la luna', meaning: 'Junto con el lucero forman una tríada sagrada que equilibra la salud y la enfermedad.', phrase: 'El equilibrio de la vida', points: [{ left: '28.5%', top: '24%' }, { left: '71.5%', top: '24%' }] },
     { title: 'El color rojo', meaning: 'Se utiliza para conmemorar y honrar a los ancestros.', phrase: 'Memoria que permanece', points: [{ left: '50.3%', top: '43.5%' }] },
-    { title: 'El pájaro', meaning: 'Anuncia los cambios de estación, marcando los ciclos de migración y dando la bienvenida al Sol.', phrase: 'El vuelo que anuncia la vida', points: [{ left: '39.2%', top: '33.8%' }, { left: '60.4%', top: '33.8%' }] },
+    { title: 'El pájaro', meaning: 'Anuncia los cambios de estación, marcando los ciclos de migración y dando la bienvenida al Sol.', phrase: 'El vuelo que anuncia la vida', points: [{ left: '39.2%', top: '35.5%' }, { left: '60.4%', top: '35.5%' }] },
   ];
 
   return <div className={dark ? 'app dark' : 'app'}>
