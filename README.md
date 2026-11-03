@@ -1,8 +1,8 @@
-Huellas de Venada
+HUELLAS DE VENADA
 
 Tradición que deja huella, arte que nos conecta.
 
-Sobre el proyecto
+SOBRE EL PROYECTO
 
 Huellas de Venada es una tienda digital dedicada a promover y comercializar ropa y textiles artesanales elaborados por mujeres de la comunidad mazahua en México.
 
@@ -10,11 +10,11 @@ El proyecto nace con el propósito de dar visibilidad al trabajo de las artesana
 
 Más que una tienda en línea, Huellas de Venada busca contribuir a la valoración del trabajo artesanal y a la difusión de la riqueza cultural mazahua.
 
-Objetivo
+OBJETIVO
 
 Crear una plataforma digital intuitiva y atractiva que permita explorar y adquirir productos artesanales, al mismo tiempo que promueve el reconocimiento del trabajo de las mujeres artesanas.
 
-Características principales
+CARACTERÍSTICAS PRINCIPALES
 
 -Página de inicio con presentación de la marca.
 
@@ -36,11 +36,11 @@ Características principales
 
 -Diseño adaptable a dispositivos móviles y computadoras.
 
--Identidad visual
+IDENTIDAD VISUAL 
 
--La identidad gráfica está inspirada en los colores y elementos visuales de los bordados mazahuas.
+La identidad gráfica está inspirada en los colores y elementos visuales de los bordados mazahuas.
 
-Paleta de colores:
+PALETA DE COLORES:
 
 -Crudo: #F7F3EA
 
@@ -50,19 +50,19 @@ Paleta de colores:
 
 -Fucsia: #C2185B
 
-Tipografías:
+TIPOGRAFÍAS:
 
 -Cormorant Garamond: títulos y encabezados.
 
 -Lato: textos y navegación.
 
-Herramientas utilizadas
+HERRAMIENTAS UTILIZADAS
 
 -Bolt.new: desarrollo asistido por inteligencia artificial.
 
 -GitHub: almacenamiento y control de versiones.
 
-Prompts utilizados:
+PROMPTS UTILIZADOS:
 
 Rol: Actúa como un desarrollador web Full Stack experto en diseño UX/UI,CSS y creación de tiendas web. También actúa como diseñador gráfico que sea capaz de trasmitir la identidad cultural mediante colores, tipografías y elementos visuales. Tu  tarea es crear una tienda en línea profesional, intuitiva y visualmente atractiva, cuidando siempre la UI/UX.
 
@@ -216,11 +216,11 @@ No implementes pasarelas de pago ni solicites información bancaria.
 Asegúrate de que todos los botones y controles tengan una función definida.
 
 
-🌐 Sitio web
+🌐 SITIO WEB
 
 https://huellas-de-venada-e-bg4y.bolt.host
 
-Nota
+NOTA
 
 La tienda corresponde a un prototipo demostrativo. Las funcionalidades de compra no implican necesariamente transacciones ni pagos reales.
 
