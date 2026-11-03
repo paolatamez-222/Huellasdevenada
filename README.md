@@ -62,7 +62,9 @@ Bolt.new: desarrollo asistido por inteligencia artificial.
 GitHub: almacenamiento y control de versiones.
 
 Prompts utilizados:
+
 Rol: Actúa como un desarrollador web Full Stack experto en diseño UX/UI,CSS y creación de tiendas web. También actúa como diseñador gráfico que sea capaz de trasmitir la identidad cultural mediante colores, tipografías y elementos visuales. Tu  tarea es crear una tienda en línea profesional, intuitiva y visualmente atractiva, cuidando siempre la UI/UX.
+
 Tarea: crear una tienda en línea profesional, intuitiva y visualmente atractiva, cuidando siempre la UI/UX. 
 La página debe funcionar como una tienda digital que permita a los visitantes:
 Conocer la marca y su propósito.
@@ -75,15 +77,24 @@ Consultar el contenido del carrito y modificar cantidades.
 Contactar a la tienda mediante un formulario.
 Conocer los significados que tienen los bordados
 Saber cuál artesana hizo el producto que se quiera adquirir
+
 Contexto: El nombre de la marca es “Huellas de Venada” ya que hace referencia a la palabra mazahua y a las artesanas. Su eslogan es "Tradición que deja huella, arte que nos conecta". El propósito de esta tienda es poder acercar a que las artesanas mazahuas vendan su trabajo y tengan más visibilidad en el mundo de la moda. La página busca ayudar a que las mujeres tengan acceso a un trabajo digno y bien remunerado, ya que se reconoce todo el trabajo manual y preparación que cada pieza conlleva. El público a quién va dirigido inicialmente es principalmente a cualquier persona que viva en México. 
+
 Diseño Visual: Te proporcionare imágenes de referencia para la identidad visual y la distribución de las diferentes funciones. La primera imágen que adjunto es el Logo que quiero que tenga la página web junto con la paleta de colores. La segunda imágen es una inspiración para la organización de las diversas secciones de la página. Y lo que resta de las imágenes son referencias para el diseño visual. Es importante mencionar que todavía no te voy a poner las imágenes de los productos reales así que mientras puedes agregar imágenes que consideres pertinentes.
+
 Para la paleta de colores te dejo los códigos HEX de algunos de ellos: #F7F3EA, #6D4C41, #00796B. Recuerda poner en el fondo un color crudo como el primero que te mande, y que los botones interactivos resalten a la vista.
+
 Usa dos tipos de tipografía que mantengan una jerarquía de importancia, que se puedan leer fácilmente y que combinen con el diseño de la página.
-Redondea los bordes de los botones, ocupa bien el espacio para evitar saturación visual y que el diseño sea compatible para computadora, tablet y celular.   
+
+Redondea los bordes de los botones, ocupa bien el espacio para evitar saturación visual y que el diseño sea compatible para computadora, tablet y celular. 
+
 Estructura de la página:
+
 A.Barra de navegación que incluya:
+
 1. Barra informativa superior que diga:
 "Envíos gratis en México en compras mayores a $2,500 MXN". que sobresalga
+
 2.Encabezado principal con:
 Logotipo de Huellas de Venada.
 Nombre de la marca.
@@ -92,6 +103,7 @@ Icono de carrito de compras interactivo que al agregar algo se muestre ahí
 Botones de iniciar sesión y crear cuenta.
 El menú debe permitir navegar correctamente entre las secciones.
 En dispositivos móviles debe transformarse en un menú desplegable.
+
 B. Sección de inicio 
 Diseña una sección de bienvenida dividida en dos columnas.
 Columna izquierda:
@@ -105,6 +117,7 @@ Columna derecha:
 Carrusel interactivo de fotografías de diferentes prendas y textiles.
 Botones para avanzar y retroceder.
 Las fotografías deben tener buena resolución
+
 C. Sección de tienda y catálogo
 Título: "Nuestra tienda".
 Subtítulo: "Descubre prendas y textiles elaborados a mano por mujeres artesanas mazahuas".
@@ -123,6 +136,7 @@ Color.
 Popularidad.
 Agrega una opción para ordenar por precio ascendente, precio descendente y productos más recientes.
 Los filtros deben modificar realmente los productos mostrados y no ser únicamente decorativos.
+
 D. Ficha individual del producto
 Al seleccionar un producto, mostrar una vista detallada con:
 Galería de fotografías.
@@ -135,6 +149,7 @@ Selector de cantidad.
 Botón "Agregar al carrito".
 El nombre de la artesana que lo elaboro y cuánto tiempo le tomo.
 Como aún no te doy información oficial utilizar datos de ejemplo para estos puntos.
+
 E. Sección "Conoce a las artesanas"
 Crear una sección visual y emotiva que permita conocer a las mujeres detrás de las creaciones.
 Incluir:
@@ -149,11 +164,13 @@ La estrella (de cuatro o de ocho picos): La estrella de cuatro puntas representa
 El maíz y los elotes: Simbolizan la fertilidad y la abundancia de la tierra; para el pueblo mazahua.
 La luna y el sol: La luna simboliza la vida y la fertilidad femenina. Junto con el sol y el lucero, forman una tríada sagrada que influye en el equilibrio entre la salud y la enfermedad.
 El color rojo: Se utiliza para conmemorar y honrar a los ancestros.
+
 F. Sección "Nuestra historia"
 Explicar el propósito de Huellas de Venada y la importancia de visibilizar el trabajo artesanal de las mujeres mazahuas.
 Incluir el eslogan de la marca:
 "Tradición que deja huella, arte que nos conecta".
 Utilizar fotografías y detalles gráficos inspirados en los textiles.
+
 G. Carrito de compras
 Desarrollar un carrito interactivo que permita:
 Agregar productos.
@@ -163,6 +180,7 @@ Consultar el subtotal.
 Consultar el total estimado.
 Los cambios deben actualizarse automáticamente.
 Para este prototipo, simular el proceso de compra sin realizar cobros reales.
+
 H. Contacto y pie de página
 Incluir un formulario con:
 Nombre.
@@ -171,6 +189,7 @@ Asunto.
 Mensaje.
 Validar los campos obligatorios y el formato del correo electrónico.
 Al enviar el formulario, mostrar una confirmación visual de recepción del mensaje. No simular que el mensaje fue enviado a un correo real si no existe una integración configurada.
+
 3. Funcionalidad e interactividad obligatoria
 Implementa las siguientes funciones:
 Carrusel de imágenes funcional.
@@ -186,7 +205,8 @@ Diseño responsivo.
 Experiencia de usuario
 Mostrar notificaciones cuando se agrega un producto al carrito.
 Evitar que los botones permanezcan inactivos.
-4. Restricciones
+
+5. Restricciones
 Utiliza React y Tailwind CSS.
 Utiliza Lucide React para los iconos.
 Organiza el código en componentes y archivos independientes.
@@ -194,10 +214,12 @@ Mantén los datos de productos en una estructura organizada para facilitar su mo
 No implementes pasarelas de pago ni solicites información bancaria.
 Asegúrate de que todos los botones y controles tengan una función definida.
 
+
 🌐 Sitio web
 
 https://huellas-de-venada-e-bg4y.bolt.host
 
 Nota
+
 La tienda corresponde a un prototipo demostrativo. Las funcionalidades de compra no implican necesariamente transacciones ni pagos reales.
 
