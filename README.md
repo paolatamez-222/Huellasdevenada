@@ -60,6 +60,7 @@ Herramientas utilizadas
 
 Bolt.new: desarrollo asistido por inteligencia artificial.
 GitHub: almacenamiento y control de versiones.
+
 Prompts utilizados:
 Rol: Actúa como un desarrollador web Full Stack experto en diseño UX/UI,CSS y creación de tiendas web. También actúa como diseñador gráfico que sea capaz de trasmitir la identidad cultural mediante colores, tipografías y elementos visuales. Tu  tarea es crear una tienda en línea profesional, intuitiva y visualmente atractiva, cuidando siempre la UI/UX.
 Tarea: crear una tienda en línea profesional, intuitiva y visualmente atractiva, cuidando siempre la UI/UX. 
